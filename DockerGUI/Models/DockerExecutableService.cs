@@ -66,8 +66,8 @@ namespace DockerGUI.Models
                 CreateNoWindow = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                StandardOutputEncoding = Encoding.UTF8,
-                StandardErrorEncoding = Encoding.UTF8
+                StandardOutputEncoding = Encoding.Default,
+                StandardErrorEncoding = Encoding.Default
             };
         }
 
