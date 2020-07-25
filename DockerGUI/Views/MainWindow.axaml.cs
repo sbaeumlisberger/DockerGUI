@@ -30,17 +30,7 @@ namespace DockerGUI.Views
         {
             AvaloniaXamlLoader.Load(this);
 
-            ViewModelBase.MessageDialogRequested += (object sender, MessageDialogModel dialogModel) =>
-            {
-                if (Dispatcher.UIThread.CheckAccess())
-                {
-                    ShowMessageDialog(dialogModel.Title, dialogModel.Message);
-                }
-                else
-                {
-                    Dispatcher.UIThread.Post(() => ShowMessageDialog(dialogModel.Title, dialogModel.Message));
-                }
-            };
+            ViewModelBase.MessageDialogRequested += ViewModelBase_MessageDialogRequested;
 
             DataContextChanged += MainWindow_DataContextChanged;
 
@@ -49,20 +39,17 @@ namespace DockerGUI.Views
 
             var commandTextBox = this.FindControl<TextBox>("commandTextBox");
             commandTextBox.KeyUp += CommandTextBox_KeyUp;
-
-            var searchTextBox = this.FindControl<TextBox>("searchTextBox");
-            searchTextBox.KeyUp += SearchTextBox_KeyUp;
         }
 
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        private void ViewModelBase_MessageDialogRequested(object sender, MessageDialogModel dialogModel)
         {
-            if (((TabControl)sender).SelectedIndex == 0)
+            if (Dispatcher.UIThread.CheckAccess())
             {
-                ViewModel.ContainerTabModel.RefreshContainers();
+                ShowMessageDialog(dialogModel.Title, dialogModel.Message);
             }
             else
             {
-                ViewModel.ImagesTabModel.RefreshImages();
+                Dispatcher.UIThread.Post(() => ShowMessageDialog(dialogModel.Title, dialogModel.Message));
             }
         }
 
@@ -85,25 +72,6 @@ namespace DockerGUI.Views
             ViewModel.LogEntries.CollectionChanged += LogEntries_CollectionChanged;
         }
 
-        private void CommandTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                var commandTextBox = (TextBox)sender;
-                ViewModel.ExecuteCommand(commandTextBox.Text);
-            }
-        }
-
-
-        private void SearchTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                var searchTextBox = (TextBox)sender;
-                ViewModel.DockerHubTabModel.Search(searchTextBox.Text);
-            }
-        }
-
         private void LogEntries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var logListBox = this.FindControl<ListBox>("logListBox");
@@ -112,5 +80,26 @@ namespace DockerGUI.Views
                 logListBox.Scroll.Offset = new Vector(0, logListBox.Scroll.Extent.Height - logListBox.Scroll.Viewport.Height);
             }
         }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (((TabControl)sender).SelectedIndex == 0)
+            {
+                ViewModel.ContainerTabModel.RefreshContainers();
+            }
+            else
+            {
+                ViewModel.ImagesTabModel.RefreshImages();
+            }
+        }
+        
+        private void CommandTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var commandTextBox = (TextBox)sender;
+                ViewModel.ExecuteCommand(commandTextBox.Text);
+            }
+        }       
     }
 }

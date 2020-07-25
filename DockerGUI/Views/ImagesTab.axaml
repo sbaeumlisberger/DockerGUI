@@ -1,0 +1,49 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="DockerGUI.Views.ImagesTab">
+  
+  <DockPanel>
+    <Button DockPanel.Dock="Bottom" Command="{Binding RefreshImages}" Content="Refresh"/>
+    <DataGrid
+     RowBackground="Transparent"
+     Items="{Binding Images}">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
+        <DataGridTextColumn Header="Repository" Binding="{Binding Repository}"/>
+        <DataGridTextColumn Header="Tag" Binding="{Binding Tag}"/>
+        <DataGridTextColumn Header="Created" Binding="{Binding Created}"/>
+        <DataGridTextColumn Header="Size" Binding="{Binding Size}"/>
+        <DataGridTemplateColumn Header="Commands">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <StackPanel Margin="2" Spacing="2" Orientation="Horizontal">
+                <Panel ToolTip.Tip="Run">
+                  <Button
+                    Content="&#xE109;"
+                    FontFamily="Segoe MDL2 Assets"
+                    Command="{Binding Run}"/>
+                </Panel>
+                <Panel ToolTip.Tip="Remove">
+                  <Button
+                    Content="&#xE74D;"
+                    FontFamily="Segoe MDL2 Assets"
+                    Command="{Binding Remove}"/>
+                </Panel>
+                <!--
+                <Panel ToolTip.Tip="Save">
+                  <Button
+                    Content="&#xE105;"
+                    FontFamily="Segoe MDL2 Assets"/>
+                </Panel>
+                -->
+              </StackPanel>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+  </DockPanel>
+</UserControl>
