@@ -51,7 +51,7 @@ namespace DockerGUI.Models
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                fileName = "/bin/bash ";
+                fileName = "/bin/bash";
                 arguments = $"-c \"docker {command.Replace("\"", "\\\"")}\"";
             }
             else

@@ -42,18 +42,26 @@ namespace DockerGUI.Views
 
         private bool IsDarkThemeEnabled_Linux()
         {
-            var processStartInfo = new ProcessStartInfo()
+            try
             {
-                FileName = "/bin/bash ",
-                Arguments = $"-c \"gsettings set org.gnome.desktop.interface gtk-theme\"",
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                RedirectStandardOutput = true,
-                StandardOutputEncoding = Encoding.Default,
-            };
-            var process = Process.Start(processStartInfo);
-            string output = process.StandardOutput.ReadToEnd();
-            return output.Contains("dark");
+                var processStartInfo = new ProcessStartInfo()
+                {
+                    FileName = "/bin/bash",
+                    Arguments = $"-c \"gsettings get org.gnome.desktop.interface gtk-theme\"",
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    StandardOutputEncoding = Encoding.Default,
+                };
+                var process = Process.Start(processStartInfo);
+                string output = process.StandardOutput.ReadToEnd();
+                return output.Contains("dark");
+            }
+            catch (Exception exception)
+            {
+                this.Log().Error(exception, "Could not retrieve theme.");
+                return false;
+            }
         }
 
     }
