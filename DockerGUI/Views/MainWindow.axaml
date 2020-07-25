@@ -1,0 +1,226 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:DockerGUI.ViewModels;assembly=DockerGUI"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+        x:Class="DockerGUI.Views.MainWindow"
+        Icon="/Assets/icon.png"
+        Title="DockerGUI"
+        Width="1000"
+        Height="600"
+        Name="window">
+
+  <Design.DataContext>
+    <vm:MainWindowModel/>
+  </Design.DataContext>
+
+  <Window.Styles>
+    <Style Selector="DataGridColumnHeader">
+      <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+  </Window.Styles>
+
+  <Panel>
+
+    <DockPanel LastChildFill="True">
+
+      <TabControl Name="tabControl" DockPanel.Dock="Top" Height="400" >
+        <TabItem Header="Container">
+          <DockPanel DataContext="{Binding ContainerTabModel}">
+            <Button DockPanel.Dock="Bottom" Command="{Binding RefreshContainers}" Content="Refresh"/>
+            <DataGrid
+              RowBackground="Transparent"
+              Items="{Binding Containers}">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name, Mode=TwoWay}" IsReadOnly="False"/>
+                <DataGridTemplateColumn Header="Status" >
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <StackPanel Orientation="Horizontal">
+                        <Panel Margin="4,0,0,0" VerticalAlignment="Center">
+                          <TextBlock
+                            IsVisible="{Binding IsRunning}"
+                            FontFamily="Segoe MDL2 Assets"
+                            Text="&#xE930;"
+                            Foreground="Green"/>
+                          <TextBlock
+                            IsVisible="{Binding !IsRunning}"
+                            FontFamily="Segoe MDL2 Assets"
+                            Text="&#xE25B;"
+                            Foreground="Orange"/>
+                        </Panel>
+                        <TextBlock
+                          VerticalAlignment="Center"
+                          Margin="4,0,0,0"
+                          Text="{Binding Status}"/>
+                      </StackPanel>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Ports" Binding="{Binding Ports}"/>
+                <DataGridTextColumn Header="Image ID" Binding="{Binding ImageID}"/>
+                <DataGridTextColumn Header="Created" Binding="{Binding Created}"/>
+                <DataGridTemplateColumn Header="Commands">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <StackPanel Margin="2" Spacing="2" Orientation="Horizontal">
+                        <Panel ToolTip.Tip="Start">
+                          <Button
+                            Content="&#xE768;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Command="{Binding Start}"/>
+                        </Panel>
+                        <Panel ToolTip.Tip="Stop">
+                          <Button
+                            Content="&#xE769;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Command="{Binding Stop}"/>
+                        </Panel>
+                        <Panel ToolTip.Tip="Restart">
+                          <Button
+                            Content="&#xE149;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Command="{Binding Restart}"/>
+                        </Panel>
+                        <Panel ToolTip.Tip="Remove">
+                          <Button
+                            Content="&#xE74D;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Command="{Binding Remove}"/>
+                        </Panel>
+                        <Panel ToolTip.Tip="Commit">
+                          <Button
+                            Content="&#xE105;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Command="{Binding Commit}"/>
+                        </Panel>
+                        <!--
+                        <Panel ToolTip.Tip="Copy files/folders">
+                          <Button
+                            Content="&#xE8AB;"
+                            FontFamily="Segoe MDL2 Assets"/>
+                        </Panel>
+                        -->
+                        <Panel ToolTip.Tip="Console">
+                          <Button
+                            Content="&#xE756;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Command="{Binding Run}"/>
+                        </Panel>
+                      </StackPanel>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+              </DataGrid.Columns>
+            </DataGrid>
+          </DockPanel>
+        </TabItem>
+        <TabItem Header="Images">
+          <DockPanel DataContext="{Binding ImagesTabModel}">
+            <Button DockPanel.Dock="Bottom" Command="{Binding RefreshImages}" Content="Refresh"/>
+            <DataGrid
+             RowBackground="Transparent"
+             Items="{Binding Images}">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
+                <DataGridTextColumn Header="Repository" Binding="{Binding Repository}"/>
+                <DataGridTextColumn Header="Tag" Binding="{Binding Tag}"/>
+                <DataGridTextColumn Header="Created" Binding="{Binding Created}"/>
+                <DataGridTextColumn Header="Size" Binding="{Binding Size}"/>
+                <DataGridTemplateColumn Header="Commands">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <StackPanel Margin="2" Spacing="2" Orientation="Horizontal">
+                        <Panel ToolTip.Tip="Run">
+                          <Button
+                            Content="&#xE109;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Command="{Binding Run}"/>
+                        </Panel>
+                        <Panel ToolTip.Tip="Remove">
+                          <Button
+                            Content="&#xE74D;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Command="{Binding Remove}"/>
+                        </Panel>
+                        <!--
+                        <Panel ToolTip.Tip="Save">
+                          <Button
+                            Content="&#xE105;"
+                            FontFamily="Segoe MDL2 Assets"/>
+                        </Panel>
+                        -->
+                      </StackPanel>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+              </DataGrid.Columns>
+            </DataGrid>
+          </DockPanel>
+        </TabItem>
+        <TabItem Header="Docker Hub">
+          <DockPanel DataContext="{Binding DockerHubTabModel}">
+            <TextBox Name="searchTextBox" DockPanel.Dock="Top" Watermark="Search for an image..."/>
+            <DataGrid
+              RowBackground="Transparent"
+              Items="{Binding SearchResults}">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="Stars" Binding="{Binding Stars}" IsReadOnly="True"/>
+                <DataGridCheckBoxColumn Header="Offical" Binding="{Binding IsOffical}" IsReadOnly="True"/>
+                <DataGridCheckBoxColumn Header="Automated" Binding="{Binding IsAutomated}" IsReadOnly="True"/>
+                <DataGridTemplateColumn Header="Commands">
+                  <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                      <StackPanel Margin="2" Spacing="2" Orientation="Horizontal">
+                        <Panel ToolTip.Tip="Pull">
+                          <Button
+                            Content="&#xE118;"
+                            FontFamily="Segoe MDL2 Assets"
+                            Command="{Binding Pull}"/>
+                        </Panel>
+                      </StackPanel>
+                    </DataTemplate>
+                  </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+              </DataGrid.Columns>
+            </DataGrid>
+          </DockPanel>
+        </TabItem>
+      </TabControl>
+
+      <DockPanel DockPanel.Dock="Bottom">
+        <TextBox Name="commandTextBox" DockPanel.Dock="Bottom" Watermark="Enter a command here..."/>
+        <ListBox Name="logListBox" Items="{Binding LogEntries}">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}">
+                <TextBlock.ContextMenu>
+                  <ContextMenu>
+                    <MenuItem Header="Copy" Command="{Binding DataContext.Copy, ElementName=window}" CommandParameter="{Binding}">
+                      <MenuItem.Icon>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="&#xE16D;" FontFamily="Segoe MDL2 Assets"/>
+                      </MenuItem.Icon>
+                    </MenuItem>
+                  </ContextMenu>
+                </TextBlock.ContextMenu>
+              </TextBlock>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+
+    </DockPanel>
+
+    <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,2,0">
+      <TextBlock Text="{Binding GUIVersion}" HorizontalAlignment="Right"/>
+      <TextBlock Text="{Binding DockerVersion}" HorizontalAlignment="Right"/>
+    </StackPanel>
+
+  </Panel>
+
+
+</Window>
