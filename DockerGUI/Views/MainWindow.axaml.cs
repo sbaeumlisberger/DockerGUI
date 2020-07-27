@@ -31,14 +31,9 @@ namespace DockerGUI.Views
             AvaloniaXamlLoader.Load(this);
 
             ViewModelBase.MessageDialogRequested += ViewModelBase_MessageDialogRequested;
+            ViewModelBase.DialogRequested += ViewModelBase_DialogRequested;
 
             DataContextChanged += MainWindow_DataContextChanged;
-
-            var tabControl = this.FindControl<TabControl>("tabControl");
-            tabControl.SelectionChanged += TabControl_SelectionChanged;
-
-            var commandTextBox = this.FindControl<TextBox>("commandTextBox");
-            commandTextBox.KeyUp += CommandTextBox_KeyUp;
         }
 
         private void ViewModelBase_MessageDialogRequested(object sender, MessageDialogModel dialogModel)
@@ -91,6 +86,10 @@ namespace DockerGUI.Views
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
+            if (DataContext is null)
+            {
+                return;
+            }
             if (((TabControl)sender).SelectedIndex == 0)
             {
                 ViewModel.ContainerTabModel.RefreshContainers();
@@ -100,7 +99,7 @@ namespace DockerGUI.Views
                 ViewModel.ImagesTabModel.RefreshImages();
             }
         }
-        
+
         private void CommandTextBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -108,6 +107,6 @@ namespace DockerGUI.Views
                 var commandTextBox = (TextBox)sender;
                 ViewModel.ExecuteCommand(commandTextBox.Text);
             }
-        }       
+        }
     }
 }

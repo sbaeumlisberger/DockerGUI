@@ -1,9 +1,9 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:DockerGUI.ViewModels;assembly=DockerGUI"
-        xmlns:view="clr-namespace:DockerGUI.Views;assembly=DockerGUI"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:DockerGUI.ViewModels;assembly=DockerGUI"
+        xmlns:view="clr-namespace:DockerGUI.Views;assembly=DockerGUI"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
         x:Class="DockerGUI.Views.MainWindow"
         Icon="/Assets/icon.png"
@@ -23,26 +23,14 @@
 
   <Panel>
 
-    <DockPanel LastChildFill="True">
+    <DockPanel>
 
-      <TabControl Name="tabControl" DockPanel.Dock="Top" Height="400" >
-        <TabItem Header="Container">
-          <view:ContainerTab DataContext="{Binding ContainerTabModel}"/>
-        </TabItem>
-        <TabItem Header="Images">
-          <view:ImagesTab DataContext="{Binding ImagesTabModel}"/>
-        </TabItem>
-        <TabItem Header="Docker Hub">
-          <view:DockerHubTab DataContext="{Binding DockerHubTabModel}"/>
-        </TabItem>
-      </TabControl>
-
-      <DockPanel DockPanel.Dock="Bottom">
-        <TextBox Name="commandTextBox" DockPanel.Dock="Bottom" Watermark="Enter a command here..."/>
+      <DockPanel DockPanel.Dock="Bottom" Height="300">
+        <TextBox DockPanel.Dock="Bottom" Watermark="Enter a command here..." KeyUp="CommandTextBox_KeyUp"/>
         <ListBox Name="logListBox" Items="{Binding LogEntries}">
           <ListBox.ItemTemplate>
             <DataTemplate>
-              <TextBlock Text="{Binding}">
+              <TextBlock Text="{Binding}" FontFamily="Courier,Consolas">
                 <TextBlock.ContextMenu>
                   <ContextMenu>
                     <MenuItem Header="Copy" Command="{Binding $parent[Window].DataContext.Copy}" CommandParameter="{Binding}">
@@ -57,6 +45,18 @@
           </ListBox.ItemTemplate>
         </ListBox>
       </DockPanel>
+
+      <TabControl SelectionChanged="TabControl_SelectionChanged">
+        <TabItem Header="Container">
+          <view:ContainerTab DataContext="{Binding ContainerTabModel}"/>
+        </TabItem>
+        <TabItem Header="Images">
+          <view:ImagesTab DataContext="{Binding ImagesTabModel}"/>
+        </TabItem>
+        <TabItem Header="Docker Hub">
+          <view:DockerHubTab DataContext="{Binding DockerHubTabModel}"/>
+        </TabItem>
+      </TabControl>
 
     </DockPanel>
 
