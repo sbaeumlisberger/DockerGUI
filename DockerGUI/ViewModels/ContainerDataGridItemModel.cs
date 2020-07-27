@@ -40,24 +40,24 @@ namespace DockerGUI.ViewModels
             name = containerinfo.Names;
         }
 
-        public void Rename(string newName)
+        public async Task Rename(string newName)
         {
             try
             {
-                dockerCommandService.RenameContainer(ID, newName);
+                await dockerCommandService.RenameContainerAsync(ID, newName);
                 name = newName;
             }
             catch (Exception exception)
             {
-                Task.Delay(10).ContinueWith(_ => ShowMessageDialog("Could not rename container", exception.Message));
+                ShowMessageDialog("Could not rename container", exception.Message);
             }
         }
 
-        public void Start()
+        public async Task Start()
         {
             try
             {
-                dockerCommandService.StartContainer(ID);
+                await dockerCommandService.StartContainerAsync(ID);
                 containerTabModel.RefreshContainers();
             }
             catch (Exception exception)
@@ -66,11 +66,11 @@ namespace DockerGUI.ViewModels
             }
         }
 
-        public void Stop()
+        public async Task Stop()
         {
             try
             {
-                dockerCommandService.StopContainer(ID);
+                await dockerCommandService.StopContainerAsync(ID);
                 containerTabModel.RefreshContainers();
             }
             catch (Exception exception)
@@ -79,11 +79,11 @@ namespace DockerGUI.ViewModels
             }
         }
 
-        public void Restart()
+        public async Task Restart()
         {
             try
             {
-                dockerCommandService.RestartContainer(ID);
+                await dockerCommandService.RestartContainerAsync(ID);
                 containerTabModel.RefreshContainers();
             }
             catch (Exception exception)
@@ -92,11 +92,11 @@ namespace DockerGUI.ViewModels
             }
         }
 
-        public void Remove()
+        public async Task Remove()
         {
             try
             {
-                dockerCommandService.RemoveContainer(ID);
+                await dockerCommandService.RemoveContainerAsync(ID);
                 containerTabModel.RefreshContainers();
             }
             catch (Exception exception)

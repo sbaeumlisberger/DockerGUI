@@ -33,10 +33,7 @@ namespace DockerGUI.Models
 
         public async Task PullImageAsync(string name)
         {
-            await Task.Run(() =>
-            {
-                dockerExecutableService.Execute($"pull {name}");
-            });
+            await dockerExecutableService.ExecuteAsync($"pull {name}").ConfigureAwait(false);
         }
 
         public void RemoveImage(string imageID)
@@ -73,29 +70,29 @@ namespace DockerGUI.Models
                  .ToList();
         }
 
-        public void StartContainer(string containerID)
+        public async Task StartContainerAsync(string containerID)
         {
-            dockerExecutableService.Execute($"start -a {containerID}");
+            await dockerExecutableService.ExecuteAsync($"start -a {containerID}").ConfigureAwait(false);
         }
 
-        public void StopContainer(string containerID)
+        public async Task StopContainerAsync(string containerID)
         {
-            dockerExecutableService.Execute($"stop {containerID}");
+            await dockerExecutableService.ExecuteAsync($"stop {containerID}").ConfigureAwait(false);
         }
 
-        internal void RestartContainer(string containerID)
+        internal async Task RestartContainerAsync(string containerID)
         {
-            dockerExecutableService.Execute($"restart {containerID}");
+            await dockerExecutableService.ExecuteAsync($"restart {containerID}").ConfigureAwait(false);
         }
 
-        public void RemoveContainer(string containerID)
+        public async Task RemoveContainerAsync(string containerID)
         {
-            dockerExecutableService.Execute($"rm {containerID}");
+            await dockerExecutableService.ExecuteAsync($"rm {containerID}").ConfigureAwait(false);
         }
 
-        public void RenameContainer(string containerID, string newName)
+        public async Task RenameContainerAsync(string containerID, string newName)
         {
-            dockerExecutableService.Execute($"rename {containerID} \"{newName}\"");
+            await dockerExecutableService.ExecuteAsync($"rename {containerID} \"{newName}\"").ConfigureAwait(false);
         }
 
         public async Task CommitContainerAsync(string containerID, string repository = null, string tag = null)
@@ -104,19 +101,16 @@ namespace DockerGUI.Models
             {
                 throw new ArgumentException($"When the parameter '{nameof(tag)}' is not null the parameter '{nameof(repository)}' must not be null.");
             }
-            await Task.Run(() =>
+            string command = $"commit {containerID}";
+            if (repository != null)
             {
-                string command = $"commit {containerID}";
-                if (repository != null)
-                {
-                    command += $" {repository}";
-                }
-                if (tag != null)
-                {
-                    command += $":{tag}";
-                }
-                dockerExecutableService.Execute(command);
-            });
+                command += $" {repository}";
+            }
+            if (tag != null)
+            {
+                command += $":{tag}";
+            }
+            await dockerExecutableService.ExecuteAsync(command).ConfigureAwait(false);
         }
 
         public IList<ImageSearchResult> SearchDockerHub(string query)
