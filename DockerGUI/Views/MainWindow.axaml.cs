@@ -53,6 +53,14 @@ namespace DockerGUI.Views
             }
         }
 
+        private void ViewModelBase_DialogRequested(object sender, DialogRequestedEventArgs args)
+        {
+            var dialog = (Window)new ViewLocator().Build(args.ViewModel);
+            dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            dialog.DataContext = args.ViewModel;
+            args.CompletionTask = dialog.ShowDialog(this);
+        }
+
         private void ShowMessageDialog(string title, string message)
         {
             var messageBox = MessageBoxManager.GetMessageBoxStandardWindow(new MessageBoxStandardParams()

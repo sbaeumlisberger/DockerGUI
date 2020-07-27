@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DockerGUI.Models
 {
@@ -14,6 +15,12 @@ namespace DockerGUI.Models
         public event EventHandler<string> Output;
 
         public event EventHandler<string> Error;
+
+        /// <exception cref="DockerException"/>
+        public async Task<string> ExecuteAsync(string command)
+        {
+            return await Task.Run(() => Execute(command)).ConfigureAwait(false);
+        }
 
         /// <exception cref="DockerException"/>
         public string Execute(string command)

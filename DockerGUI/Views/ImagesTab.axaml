@@ -4,12 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="DockerGUI.Views.ImagesTab">
-  
+
   <DockPanel>
     <Button DockPanel.Dock="Bottom" Command="{Binding RefreshImages}" Content="Refresh"/>
     <DataGrid
-     RowBackground="Transparent"
-     Items="{Binding Images}">
+      RowBackground="Transparent"
+      Items="{Binding Images}">
       <DataGrid.Columns>
         <DataGridTextColumn Header="ID" Binding="{Binding ID}"/>
         <DataGridTextColumn Header="Repository" Binding="{Binding Repository}"/>
@@ -24,7 +24,7 @@
                   <Button
                     Content="&#xE109;"
                     FontFamily="Segoe MDL2 Assets"
-                    Command="{Binding Run}"/>
+                    Command="{Binding RunAsync}"/>
                 </Panel>
                 <Panel ToolTip.Tip="Remove">
                   <Button

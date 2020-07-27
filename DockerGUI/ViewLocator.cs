@@ -9,9 +9,9 @@ namespace DockerGUI
     {
         public bool SupportsRecycling => false;
 
-        public IControl Build(object data)
+        public IControl Build(object viewModel)
         {
-            var name = data.GetType().FullName.Replace("ViewModel", "View");
+            var name = viewModel.GetType().FullName.Replace("Model", "");
             var type = Type.GetType(name);
 
             if (type != null)
@@ -20,7 +20,7 @@ namespace DockerGUI
             }
             else
             {
-                return new TextBlock { Text = "Not Found: " + name };
+                throw new Exception($"No view found for view model of type '{viewModel.GetType().FullName}'");
             }
         }
 

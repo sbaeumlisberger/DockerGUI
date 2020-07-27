@@ -1,7 +1,9 @@
 ﻿using DockerGUI.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DockerGUI.ViewModels
 {
@@ -41,11 +43,20 @@ namespace DockerGUI.ViewModels
             }
         }
 
-        public void Run()
+        public async Task RunAsync()
         {
             try
             {
-                dockerCommandService.RunImage(ID);
+                var dialogModel = new CreateContainerDialogModel();
+                await ShowDialogAsync(dialogModel);
+                if (!dialogModel.IsCanceld)
+                {
+                    var portBindings = dialogModel.PortBindings
+                        .Where(vm => vm.IsValid())
+                        .Select(vm => vm.ToPortBinding());
+
+                    await dockerCommandService.RunImageAsync(ID, portBindings, dialogModel.AdditionalOptions);
+                }
             }
             catch (Exception exception)
             {

@@ -1,0 +1,55 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:DockerGUI.ViewModels;assembly=DockerGUI"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="DockerGUI.Views.CreateContainerDialog"
+        Icon="/Assets/icon.png"
+        Title="Create Container"        
+        Width="400"
+        Height="300">
+
+  <DockPanel Margin="8">
+
+    <Panel DockPanel.Dock="Bottom" Margin="0,16,0,0">
+      <Button HorizontalAlignment="Left" Content="Cancel" Click="CancelButton_Click"/>
+      <Button HorizontalAlignment="Right" Content="Create" Click="CreateButton_Click"/>
+    </Panel>
+
+    <ScrollViewer>
+      <StackPanel>
+        <TextBlock Text="Create Container" FontSize="16" />
+
+        <TextBlock Margin="0,16,0,0" Text="Port Bindings" FontWeight="Bold"/>
+        <ItemsRepeater Items="{Binding PortBindings}">
+          <ItemsRepeater.ItemTemplate>
+            <DataTemplate>
+              <Grid Margin="0,4,0,0" ColumnDefinitions="*,4,*,4,Auto">
+                <TextBox Grid.Column="0" Watermark="Container Port" Text="{Binding ContainerPort, Mode=TwoWay}"/>
+                <TextBox Grid.Column="2" Watermark="Host Port" Text="{Binding HostPort, Mode=TwoWay}"/>
+                <Button
+                  Grid.Column="4"
+                  Content="&#xE74D;"
+                  FontFamily="Segoe MDL2 Assets"
+                  Command="{Binding $parent[ItemsRepeater].DataContext.RemovePortBinding}"
+                  CommandParameter="{Binding}"/>
+              </Grid>
+            </DataTemplate>
+          </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>              
+        <Button Margin="0,4,0,0" Content="Add" HorizontalAlignment="Left" Command="{Binding AddPortBinding}"/>
+
+        <TextBlock Margin="0,16,0,0" Text="Additional Options" FontWeight="Bold"/>
+        <TextBox Margin="0,4,0,0" Text="{Binding AdditionalOptions, Mode=TwoWay}"/>
+        <TextBlock 
+          Margin="0,4,0,0" 
+          Classes="Hyperlink"
+          Text="See the documentation on docker.com" 
+          PointerReleased="DockerDocumentationLink_PointerReleased"/>
+      </StackPanel>
+    </ScrollViewer>
+
+  </DockPanel>
+
+</Window>

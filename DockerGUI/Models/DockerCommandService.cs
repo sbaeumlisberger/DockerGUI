@@ -44,9 +44,25 @@ namespace DockerGUI.Models
             dockerExecutableService.Execute($"rmi {imageID}");
         }
 
-        public void RunImage(string imageID)
-        {            
-            dockerExecutableService.Execute($"run {imageID}");
+        public async Task RunImageAsync(string imageID, IEnumerable<PortBinding> portBindings, string additionalOptions)
+        {
+            List<string> options = new List<string>();
+            if (portBindings.Any())
+            {
+                options.Add("-p " + string.Join(" ", portBindings.Select(portBinding => $"{portBinding.HostPort}:{portBinding.ContainerPort}")));
+            }
+            if (!string.IsNullOrEmpty(additionalOptions)) 
+            {
+                options.Add(additionalOptions);
+            }
+            if (options.Any())
+            {
+                await dockerExecutableService.ExecuteAsync($"run {string.Join(" ", options)} {imageID}").ConfigureAwait(false);
+            }
+            else
+            {
+                await dockerExecutableService.ExecuteAsync($"run {imageID}").ConfigureAwait(false);
+            }
         }
 
         public IList<DockerContainerInfo> GetContainers()
