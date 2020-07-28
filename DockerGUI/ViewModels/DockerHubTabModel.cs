@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DockerGUI.ViewModels
 {
@@ -18,18 +19,18 @@ namespace DockerGUI.ViewModels
             this.dockerCommandService = dockerCommandService;
         }
 
-        public void Search(string query)
+        public async Task Search(string query)
         {
             try
             {
-                SearchResults = dockerCommandService.SearchDockerHub(query)
+                SearchResults = (await dockerCommandService.SearchDockerHubAsync(query))
                     .Select(searchResult => new ImageSearchResultDataGridItemModel(dockerCommandService, searchResult))
                     .ToList();
                 this.RaisePropertyChanged(nameof(SearchResults));
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not retrieve search results.", exception.Message);
+                await ShowMessageDialogAsync("Could not retrieve search results.", exception.Message);
             }
         }
     }

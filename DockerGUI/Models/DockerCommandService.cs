@@ -18,14 +18,14 @@ namespace DockerGUI.Models
             this.dockerExecutableService = dockerExecutableService;
         }
 
-        public string GetVersion()
+        public async Task<string> GetVersionAsync()
         {
-            return dockerExecutableService.Execute("-v").Trim();
+            return (await dockerExecutableService.ExecuteAsync("-v").ConfigureAwait(false)).Trim();
         }
 
-        public IList<DockerImageInfo> GetImages()
+        public async Task<IList<DockerImageInfo>> GetImagesAsync()
         {
-            string result = dockerExecutableService.Execute("images");
+            string result = await dockerExecutableService.ExecuteAsync("images").ConfigureAwait(false);
             return ParseTable(result, new[] { "REPOSITORY", "TAG", "IMAGE ID", "CREATED", "SIZE" })
                  .Select(row => ParseDockerImageInfo(row))
                  .ToList();
@@ -36,19 +36,23 @@ namespace DockerGUI.Models
             await dockerExecutableService.ExecuteAsync($"pull {name}").ConfigureAwait(false);
         }
 
-        public void RemoveImage(string imageID)
+        public async Task RemoveImageAsync(string imageID)
         {
-            dockerExecutableService.Execute($"rmi {imageID}");
+            await dockerExecutableService.ExecuteAsync($"rmi {imageID}").ConfigureAwait(false);
         }
 
-        public async Task RunImageAsync(string imageID, IEnumerable<PortBinding> portBindings, string additionalOptions)
+        public async Task RunImageAsync(string imageID, string containerName, IEnumerable<PortBinding> portBindings, string additionalOptions)
         {
             List<string> options = new List<string>();
+            if (!string.IsNullOrEmpty(containerName))
+            {
+                options.Add($"--name \"{containerName}\"");
+            }
             if (portBindings.Any())
             {
                 options.Add("-p " + string.Join(" ", portBindings.Select(portBinding => $"{portBinding.HostPort}:{portBinding.ContainerPort}")));
             }
-            if (!string.IsNullOrEmpty(additionalOptions)) 
+            if (!string.IsNullOrEmpty(additionalOptions))
             {
                 options.Add(additionalOptions);
             }
@@ -62,9 +66,9 @@ namespace DockerGUI.Models
             }
         }
 
-        public IList<DockerContainerInfo> GetContainers()
+        public async Task<IList<DockerContainerInfo>> GetContainersAsync()
         {
-            string result = dockerExecutableService.Execute("ps -a");
+            string result = await dockerExecutableService.ExecuteAsync("ps -a").ConfigureAwait(false);
             return ParseTable(result, new[] { "CONTAINER ID", "IMAGE", "COMMAND", "CREATED", "STATUS", "PORTS", "NAMES" })
                  .Select(row => ParseDockerContainerInfo(row))
                  .ToList();
@@ -113,9 +117,9 @@ namespace DockerGUI.Models
             await dockerExecutableService.ExecuteAsync(command).ConfigureAwait(false);
         }
 
-        public IList<ImageSearchResult> SearchDockerHub(string query)
+        public async Task<IList<ImageSearchResult>> SearchDockerHubAsync(string query)
         {
-            string result = dockerExecutableService.Execute($"search --no-trunc {query}");
+            string result = await dockerExecutableService.ExecuteAsync($"search --no-trunc {query}").ConfigureAwait(false);
             return ParseTable(result, new[] { "NAME", "DESCRIPTION", "STARS", "OFFICIAL", "AUTOMATED" })
                  .Select(row => ParseImageSearchResult(row))
                  .ToList();

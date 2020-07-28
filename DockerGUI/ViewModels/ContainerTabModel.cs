@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DockerGUI.ViewModels
 {
@@ -18,18 +19,18 @@ namespace DockerGUI.ViewModels
             this.dockerCommandService = dockerCommandService;
         }
 
-        public void RefreshContainers()
+        public async Task RefreshContainersAsync()
         {
             try
             {
-                Containers = dockerCommandService.GetContainers()
+                Containers = (await dockerCommandService.GetContainersAsync())
                     .Select(containerInfo => new ContainerDataGridItemModel(this, dockerCommandService, containerInfo))
                     .ToList();
                 this.RaisePropertyChanged(nameof(Containers));
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not retrieve containers", exception.Message);
+                await ShowMessageDialogAsync("Could not retrieve containers", exception.Message);
             }
         }
 

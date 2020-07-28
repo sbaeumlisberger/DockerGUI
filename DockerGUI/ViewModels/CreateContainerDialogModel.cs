@@ -8,6 +8,8 @@ namespace DockerGUI.ViewModels
 {
     public class CreateContainerDialogModel : ViewModelBase
     {
+        public string ContainerName { get; set; }
+
         public ObservableCollection<PortBindingListItemModel> PortBindings { get; } = new ObservableCollection<PortBindingListItemModel>();
 
         public string AdditionalOptions { get; set; }

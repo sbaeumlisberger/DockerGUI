@@ -4,13 +4,11 @@ using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using DockerGUI.ViewModels;
-using MessageBox.Avalonia;
-using MessageBox.Avalonia.DTO;
-using MessageBox.Avalonia.Enums;
 using System;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
-using IconEnum = MessageBox.Avalonia.Enums.Icon;
+using System.Threading.Tasks;
 
 namespace DockerGUI.Views
 {
@@ -30,22 +28,9 @@ namespace DockerGUI.Views
         {
             AvaloniaXamlLoader.Load(this);
 
-            ViewModelBase.MessageDialogRequested += ViewModelBase_MessageDialogRequested;
             ViewModelBase.DialogRequested += ViewModelBase_DialogRequested;
 
             DataContextChanged += MainWindow_DataContextChanged;
-        }
-
-        private void ViewModelBase_MessageDialogRequested(object sender, MessageDialogModel dialogModel)
-        {
-            if (Dispatcher.UIThread.CheckAccess())
-            {
-                ShowMessageDialog(dialogModel.Title, dialogModel.Message);
-            }
-            else
-            {
-                Dispatcher.UIThread.Post(() => ShowMessageDialog(dialogModel.Title, dialogModel.Message));
-            }
         }
 
         private void ViewModelBase_DialogRequested(object sender, DialogRequestedEventArgs args)
@@ -53,21 +38,18 @@ namespace DockerGUI.Views
             var dialog = (Window)new ViewLocator().Build(args.ViewModel);
             dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             dialog.DataContext = args.ViewModel;
-            args.CompletionTask = dialog.ShowDialog(this);
-        }
 
-        private void ShowMessageDialog(string title, string message)
-        {
-            var messageBox = MessageBoxManager.GetMessageBoxStandardWindow(new MessageBoxStandardParams()
+            if (Dispatcher.UIThread.CheckAccess())
             {
-                ContentTitle = title,
-                ContentHeader = title,
-                ContentMessage = message,
-                ButtonDefinitions = ButtonEnum.Ok,
-                Icon = IconEnum.None,
-                // MaxWidth = 600
-            });
-            messageBox.Show();
+                args.CompletionTask = dialog.ShowDialog(this);
+            }
+            else
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    args.CompletionTask = dialog.ShowDialog(this);
+                });
+            }
         }
 
         private void MainWindow_DataContextChanged(object sender, EventArgs e)
@@ -75,37 +57,47 @@ namespace DockerGUI.Views
             ViewModel.LogEntries.CollectionChanged += LogEntries_CollectionChanged;
         }
 
-        private void LogEntries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private async void LogEntries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var logListBox = this.FindControl<ListBox>("logListBox");
             if (logListBox.Scroll != null)
             {
-                logListBox.Scroll.Offset = new Vector(0, logListBox.Scroll.Extent.Height - logListBox.Scroll.Viewport.Height);
+                try
+                {
+                    await Task.Delay(10);
+                    logListBox.Scroll.Offset = new Vector(0, logListBox.Scroll.Extent.Height - logListBox.Scroll.Viewport.Height);
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine(exception.ToString());
+                }
             }
         }
 
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs args)
+        private async void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             if (DataContext is null)
             {
                 return;
             }
-            if (((TabControl)sender).SelectedIndex == 0)
+            int tabIndex = ((TabControl)sender).SelectedIndex;
+            if (tabIndex == 0)
             {
-                ViewModel.ContainerTabModel.RefreshContainers();
+                await ViewModel.ContainerTabModel.RefreshContainersAsync();
             }
-            else
+            else if (tabIndex == 1)
             {
-                ViewModel.ImagesTabModel.RefreshImages();
+                await ViewModel.ImagesTabModel.RefreshImagesAsync();
             }
         }
 
-        private void CommandTextBox_KeyUp(object sender, KeyEventArgs e)
+        private async void CommandTextBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 var commandTextBox = (TextBox)sender;
-                ViewModel.ExecuteCommand(commandTextBox.Text);
+                await ViewModel.ExecuteCommandAsync(commandTextBox.Text);
+                commandTextBox.Text = string.Empty;
             }
         }
     }

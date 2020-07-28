@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DockerGUI.ViewModels
 {
-    public class MessageDialogModel
+    public class MessageDialogModel : ViewModelBase
     {
         public string Title { get; }
         public string Message { get; }

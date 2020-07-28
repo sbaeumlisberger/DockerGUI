@@ -23,30 +23,14 @@
 
   <Panel>
 
-    <DockPanel>
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
 
-      <DockPanel DockPanel.Dock="Bottom" Height="300">
-        <TextBox DockPanel.Dock="Bottom" Watermark="Enter a command here..." KeyUp="CommandTextBox_KeyUp"/>
-        <ListBox Name="logListBox" Items="{Binding LogEntries}">
-          <ListBox.ItemTemplate>
-            <DataTemplate>
-              <TextBlock Text="{Binding}" FontFamily="Courier,Consolas">
-                <TextBlock.ContextMenu>
-                  <ContextMenu>
-                    <MenuItem Header="Copy" Command="{Binding $parent[Window].DataContext.Copy}" CommandParameter="{Binding}">
-                      <MenuItem.Icon>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="&#xE16D;" FontFamily="Segoe MDL2 Assets"/>
-                      </MenuItem.Icon>
-                    </MenuItem>
-                  </ContextMenu>
-                </TextBlock.ContextMenu>
-              </TextBlock>
-            </DataTemplate>
-          </ListBox.ItemTemplate>
-        </ListBox>
-      </DockPanel>
-
-      <TabControl SelectionChanged="TabControl_SelectionChanged">
+      <TabControl Grid.Row="0" SelectionChanged="TabControl_SelectionChanged">
         <TabItem Header="Container">
           <view:ContainerTab DataContext="{Binding ContainerTabModel}"/>
         </TabItem>
@@ -57,8 +41,40 @@
           <view:DockerHubTab DataContext="{Binding DockerHubTabModel}"/>
         </TabItem>
       </TabControl>
+      
+      <GridSplitter Grid.Row="1"/>
 
-    </DockPanel>
+      <DockPanel Grid.Row="2">
+        <TextBox DockPanel.Dock="Bottom" Watermark="Enter a command here..." KeyUp="CommandTextBox_KeyUp"/>
+        <Panel>
+          <ListBox VirtualizationMode="None" Name="logListBox" Items="{Binding LogEntries}">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}" FontFamily="Courier,Consolas">
+                  <TextBlock.ContextMenu>
+                    <ContextMenu>
+                      <MenuItem Header="Copy" Command="{Binding $parent[Window].DataContext.Copy}" CommandParameter="{Binding}">
+                        <MenuItem.Icon>
+                          <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="&#xE16D;" FontFamily="Segoe MDL2 Assets"/>
+                        </MenuItem.Icon>
+                      </MenuItem>
+                    </ContextMenu>
+                  </TextBlock.ContextMenu>
+                </TextBlock>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <Button 
+            Margin="32"
+            Padding="4"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Content="&#xE74D;" 
+            FontFamily="Segoe MDL2 Assets" 
+            Command="{Binding ClearLog}" />
+        </Panel>
+      </DockPanel>
+    </Grid>
 
     <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,2,0">
       <TextBlock Text="{Binding GUIVersion}" HorizontalAlignment="Right"/>

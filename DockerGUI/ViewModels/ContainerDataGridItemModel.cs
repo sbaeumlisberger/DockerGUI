@@ -17,7 +17,7 @@ namespace DockerGUI.ViewModels
         public string Created { get; }
         public string Status { get; }
         public string Ports { get; }
-        public string Name { get => name; set => Rename(value); }
+        public string Name { get => name; set => RenameAsync(value); }
 
         public bool IsRunning => !Status.Contains("Exited");
 
@@ -40,7 +40,7 @@ namespace DockerGUI.ViewModels
             name = containerinfo.Names;
         }
 
-        public async Task Rename(string newName)
+        public async Task RenameAsync(string newName)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace DockerGUI.ViewModels
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not rename container", exception.Message);
+                await ShowMessageDialogAsync("Could not rename container", exception.Message);
             }
         }
 
@@ -58,11 +58,11 @@ namespace DockerGUI.ViewModels
             try
             {
                 await dockerCommandService.StartContainerAsync(ID);
-                containerTabModel.RefreshContainers();
+                await containerTabModel.RefreshContainersAsync();
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not start container", exception.Message);
+                await ShowMessageDialogAsync("Could not start container", exception.Message);
             }
         }
 
@@ -71,11 +71,11 @@ namespace DockerGUI.ViewModels
             try
             {
                 await dockerCommandService.StopContainerAsync(ID);
-                containerTabModel.RefreshContainers();
+                await containerTabModel.RefreshContainersAsync();
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not stop container", exception.Message);
+                await ShowMessageDialogAsync("Could not stop container", exception.Message);
             }
         }
 
@@ -84,11 +84,11 @@ namespace DockerGUI.ViewModels
             try
             {
                 await dockerCommandService.RestartContainerAsync(ID);
-                containerTabModel.RefreshContainers();
+                await containerTabModel.RefreshContainersAsync();
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not restart container", exception.Message);
+                await ShowMessageDialogAsync("Could not restart container", exception.Message);
             }
         }
 
@@ -97,11 +97,11 @@ namespace DockerGUI.ViewModels
             try
             {
                 await dockerCommandService.RemoveContainerAsync(ID);
-                containerTabModel.RefreshContainers();
+                await containerTabModel.RefreshContainersAsync();
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not remove container", exception.Message);
+                await ShowMessageDialogAsync("Could not remove container", exception.Message);
             }
         }
 
@@ -113,7 +113,7 @@ namespace DockerGUI.ViewModels
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not commit container", exception.Message);
+                await ShowMessageDialogAsync("Could not commit container", exception.Message);
             }
         }
 
@@ -139,7 +139,7 @@ namespace DockerGUI.ViewModels
             }
             else
             {
-                ShowMessageDialog("Operating system not supported", "");
+                ShowMessageDialogAsync("Operating system not supported", "");
             }
         }
 

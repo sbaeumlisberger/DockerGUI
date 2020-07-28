@@ -33,7 +33,7 @@ namespace DockerGUI.ViewModels
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not pull image", exception.Message);
+                ShowMessageDialogAsync("Could not pull image", exception.Message);
             }
         }
     }

@@ -6,7 +6,7 @@
              x:Class="DockerGUI.Views.ContainerTab">
 
   <DockPanel>
-    <Button DockPanel.Dock="Bottom" Command="{Binding RefreshContainers}" Content="Refresh"/>
+    <Button DockPanel.Dock="Bottom" Command="{Binding RefreshContainersAsync}" Content="Refresh"/>
     <DataGrid
       RowBackground="Transparent"
       Items="{Binding Containers}">

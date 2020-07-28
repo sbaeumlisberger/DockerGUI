@@ -10,13 +10,14 @@ namespace DockerGUI.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {
-        public static event EventHandler<MessageDialogModel> MessageDialogRequested;
-
         public static event EventHandler<DialogRequestedEventArgs> DialogRequested;
 
-        protected void ShowMessageDialog(string title, string message)
+        protected Task ShowMessageDialogAsync(string title, string message)
         {
-            MessageDialogRequested.Invoke(this, new MessageDialogModel(title, message));
+            var messageDialogModel = new MessageDialogModel(title, message);
+            var eventArgs = new DialogRequestedEventArgs(messageDialogModel);
+            DialogRequested.Invoke(this, eventArgs);
+            return eventArgs.CompletionTask;
         }
 
         protected Task ShowDialogAsync(ViewModelBase viewModel)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DockerGUI.Utils;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -19,30 +20,28 @@ namespace DockerGUI.Models
         /// <exception cref="DockerException"/>
         public async Task<string> ExecuteAsync(string command)
         {
-            return await Task.Run(() => Execute(command)).ConfigureAwait(false);
-        }
-
-        /// <exception cref="DockerException"/>
-        public string Execute(string command)
-        {
             var processStartInfo = CreateProcessStartInfo(command);
-            var process = Process.Start(processStartInfo);
+            using var process = Process.Start(processStartInfo);
             Executed?.Invoke(this, $"docker {command}");
-            string output = process.StandardOutput.ReadToEnd();
-            string error = process.StandardError.ReadToEnd();
+
+            string output = await process.StandardOutput.ReadToEndAsync();
             if (!string.IsNullOrEmpty(output))
             {
                 Output?.Invoke(this, output);
             }
+
+            string error = await process.StandardError.ReadToEndAsync();
             if (!string.IsNullOrEmpty(error))
             {
                 Error?.Invoke(this, error);
             }
-            process.WaitForExit();
-            if (process.ExitCode != 0)
+
+            int exitCode = await process.WaitForExitAsync().ConfigureAwait(false);
+            if (exitCode != 0)
             {
                 throw new DockerException(error, process.ExitCode);
             }
+
             return output;
         }
 

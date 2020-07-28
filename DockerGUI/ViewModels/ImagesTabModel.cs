@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DockerGUI.ViewModels
 {
@@ -18,18 +19,18 @@ namespace DockerGUI.ViewModels
             this.dockerCommandService = dockerCommandService;
         }
 
-        public void RefreshImages()
+        public async Task RefreshImagesAsync()
         {
             try
             {
-                Images = dockerCommandService.GetImages()
+                Images = (await dockerCommandService.GetImagesAsync())
                     .Select(imageInfo => new ImageDataGridItemModel(this, dockerCommandService, imageInfo))
                     .ToList();
                 this.RaisePropertyChanged(nameof(Images));
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not retrieve images", exception.Message);
+                await ShowMessageDialogAsync("Could not retrieve images", exception.Message);
             }
         }
 

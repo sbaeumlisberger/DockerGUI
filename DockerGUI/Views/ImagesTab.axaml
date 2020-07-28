@@ -6,7 +6,7 @@
              x:Class="DockerGUI.Views.ImagesTab">
 
   <DockPanel>
-    <Button DockPanel.Dock="Bottom" Command="{Binding RefreshImages}" Content="Refresh"/>
+    <Button DockPanel.Dock="Bottom" Command="{Binding RefreshImagesAsync}" Content="Refresh"/>
     <DataGrid
       RowBackground="Transparent"
       Items="{Binding Images}">
@@ -30,7 +30,7 @@
                   <Button
                     Content="&#xE74D;"
                     FontFamily="Segoe MDL2 Assets"
-                    Command="{Binding Remove}"/>
+                    Command="{Binding RemoveAsync}"/>
                 </Panel>
                 <!--
                 <Panel ToolTip.Tip="Save">

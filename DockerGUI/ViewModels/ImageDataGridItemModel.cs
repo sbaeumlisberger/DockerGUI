@@ -30,16 +30,16 @@ namespace DockerGUI.ViewModels
             Size = imageInfo.Size;
         }
 
-        public void Remove() 
+        public async Task RemoveAsync() 
         {
             try
             {
-                dockerCommandService.RemoveImage(ID);
-                imagesTabModel.RefreshImages();
+                await dockerCommandService.RemoveImageAsync(ID);
+                await imagesTabModel.RefreshImagesAsync();
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not remove image", exception.Message);
+                await ShowMessageDialogAsync("Could not remove image", exception.Message);
             }
         }
 
@@ -55,12 +55,12 @@ namespace DockerGUI.ViewModels
                         .Where(vm => vm.IsValid())
                         .Select(vm => vm.ToPortBinding());
 
-                    await dockerCommandService.RunImageAsync(ID, portBindings, dialogModel.AdditionalOptions);
+                    await dockerCommandService.RunImageAsync(ID, dialogModel.ContainerName, portBindings, dialogModel.AdditionalOptions);
                 }
             }
             catch (Exception exception)
             {
-                ShowMessageDialog("Could not run image", exception.Message);
+               await ShowMessageDialogAsync("Could not run image", exception.Message);
             }
         }
 
