@@ -1,7 +1,9 @@
 ﻿using DockerGUI.Models;
+using DockerGUI.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DockerGUI.ViewModels
 {
@@ -25,7 +27,7 @@ namespace DockerGUI.ViewModels
             IsAutomated = searchResult.IsAutomated;
         }
 
-        public async System.Threading.Tasks.Task Pull()
+        public async Task Pull()
         {
             try
             {
@@ -33,8 +35,13 @@ namespace DockerGUI.ViewModels
             }
             catch (Exception exception)
             {
-                ShowMessageDialogAsync("Could not pull image", exception.Message);
+                await ShowMessageDialogAsync("Could not pull image", exception.Message);
             }
+        }
+
+        public void ShowInBrowser()
+        {
+            BrowserUtil.OpenUrl("https://hub.docker.com/_/" + Name);
         }
     }
 }

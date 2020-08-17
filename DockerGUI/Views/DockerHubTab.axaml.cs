@@ -23,12 +23,12 @@ namespace DockerGUI.Views
             searchTextBox.KeyUp += SearchTextBox_KeyUp;
         }
 
-        private void SearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        private async void SearchTextBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 var searchTextBox = (TextBox)sender;
-                ViewModel.Search(searchTextBox.Text);
+                await ViewModel.SearchAsync(searchTextBox.Text);
             }
         }
     }

@@ -19,7 +19,7 @@ namespace DockerGUI.ViewModels
             this.dockerCommandService = dockerCommandService;
         }
 
-        public async Task Search(string query)
+        public async Task SearchAsync(string query)
         {
             try
             {

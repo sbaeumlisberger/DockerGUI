@@ -6,12 +6,33 @@
              x:Class="DockerGUI.Views.DockerHubTab">
 
   <DockPanel>
-    <TextBox Name="searchTextBox" DockPanel.Dock="Top" Watermark="Search for an image..."/>
+    <DockPanel DockPanel.Dock="Top">
+      <Button
+        DockPanel.Dock="Right"
+        Width="40"
+        Content="&#xE721;"
+        FontFamily="Segoe MDL2 Assets"
+        Command="{Binding SearchAsync}"
+        CommandParameter="{Binding #searchTextBox.Text}"/>
+        <TextBox Name="searchTextBox" Watermark="Search for an image..."/>
+    </DockPanel>
     <DataGrid
       RowBackground="Transparent"
       Items="{Binding SearchResults}">
       <DataGrid.Columns>
-        <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+        <DataGridTemplateColumn Header="Name">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Button
+                HorizontalAlignment="Left"
+                Background="Transparent"
+                BorderThickness="0"
+                Cursor="Hand"
+                Content="{Binding Name}"
+                Command="{Binding ShowInBrowser}"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
         <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True" Width="*"/>
         <DataGridTextColumn Header="Stars" Binding="{Binding Stars}" IsReadOnly="True"/>
         <DataGridCheckBoxColumn Header="Offical" Binding="{Binding IsOffical}" IsReadOnly="True"/>
