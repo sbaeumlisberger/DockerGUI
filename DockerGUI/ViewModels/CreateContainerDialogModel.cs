@@ -12,6 +12,8 @@ namespace DockerGUI.ViewModels
 
         public ObservableCollection<PortBindingListItemModel> PortBindings { get; } = new ObservableCollection<PortBindingListItemModel>();
 
+        public ObservableCollection<EnvironmentVariableListItemModel> EnvironmentVariables { get; } = new ObservableCollection<EnvironmentVariableListItemModel>();
+
         public string AdditionalOptions { get; set; }
 
         public bool IsCanceld { get; set; } = true;
@@ -25,5 +27,15 @@ namespace DockerGUI.ViewModels
         {
             PortBindings.Remove(portBinding);
         }
+        public void AddEnvironmentVariable()
+        {
+            EnvironmentVariables.Add(new EnvironmentVariableListItemModel());
+        }
+
+        public void RemoveEnvironmentVariable(EnvironmentVariableListItemModel portBinding)
+        {
+            EnvironmentVariables.Remove(portBinding);
+        }
+        
     }
 }

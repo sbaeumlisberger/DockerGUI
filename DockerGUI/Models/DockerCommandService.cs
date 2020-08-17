@@ -41,24 +41,11 @@ namespace DockerGUI.Models
             await dockerExecutableService.ExecuteAsync($"rmi {imageID}").ConfigureAwait(false);
         }
 
-        public async Task RunImageAsync(string imageID, string containerName, IEnumerable<PortBinding> portBindings, string additionalOptions)
+        public async Task RunImageAsync(string imageID, DockerRunOptions options = null)
         {
-            List<string> options = new List<string>();
-            if (!string.IsNullOrEmpty(containerName))
+            if (options?.ToString() is string optionsString && optionsString != string.Empty)
             {
-                options.Add($"--name \"{containerName}\"");
-            }
-            if (portBindings.Any())
-            {
-                options.Add("-p " + string.Join(" ", portBindings.Select(portBinding => $"{portBinding.HostPort}:{portBinding.ContainerPort}")));
-            }
-            if (!string.IsNullOrEmpty(additionalOptions))
-            {
-                options.Add(additionalOptions);
-            }
-            if (options.Any())
-            {
-                await dockerExecutableService.ExecuteAsync($"run {string.Join(" ", options)} {imageID}").ConfigureAwait(false);
+                await dockerExecutableService.ExecuteAsync($"run {optionsString} {imageID}").ConfigureAwait(false);
             }
             else
             {

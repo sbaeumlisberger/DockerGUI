@@ -55,7 +55,17 @@ namespace DockerGUI.ViewModels
                         .Where(vm => vm.IsValid())
                         .Select(vm => vm.ToPortBinding());
 
-                    await dockerCommandService.RunImageAsync(ID, dialogModel.ContainerName, portBindings, dialogModel.AdditionalOptions);
+                    var environmentVariables = dialogModel.EnvironmentVariables
+                      .Where(vm => vm.IsValid())
+                      .ToDictionary(vm => vm.Name, vm => vm.Value);
+
+                    await dockerCommandService.RunImageAsync(ID, new DockerRunOptions() 
+                    {
+                        ContainerName = dialogModel.ContainerName,
+                        PortBindings = portBindings,
+                        EnvironmentVariables = environmentVariables,
+                        AdditionalOptions = dialogModel.AdditionalOptions
+                    });
                 }
             }
             catch (Exception exception)

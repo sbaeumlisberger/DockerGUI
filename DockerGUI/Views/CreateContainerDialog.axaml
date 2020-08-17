@@ -8,7 +8,7 @@
         Icon="/Assets/icon.png"
         Title="Create Container"
         Width="400"
-        Height="300">
+        Height="400">
 
   <DockPanel Margin="8">
 
@@ -19,7 +19,7 @@
 
     <DockPanel>
       <TextBlock DockPanel.Dock="Top" Text="Create Container" FontSize="16" />
-      <ScrollViewer Margin="0,16,0,0">
+      <ScrollViewer Margin="0,16,0,0" HorizontalScrollBarVisibility="Disabled">
         <StackPanel>
           <TextBlock Text="Container Name" FontWeight="Bold"/>
           <TextBox Margin="0,4,0,0" Text="{Binding ContainerName, Mode=TwoWay}"/>
@@ -43,6 +43,25 @@
           </ItemsRepeater>
           <Button Margin="0,4,0,0" Content="Add" HorizontalAlignment="Left" Command="{Binding AddPortBinding}"/>
 
+          <TextBlock Margin="0,16,0,0" Text="Environment Variables" FontWeight="Bold"/>
+          <ItemsRepeater Items="{Binding EnvironmentVariables}">
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate>
+                <Grid Margin="0,4,0,0" ColumnDefinitions="*,4,*,4,Auto">
+                  <TextBox Grid.Column="0" Watermark="Name" Text="{Binding Name, Mode=TwoWay}"/>
+                  <TextBox Grid.Column="2" Watermark="Value" Text="{Binding Value, Mode=TwoWay}"/>
+                  <Button
+                    Grid.Column="4"
+                    Content="&#xE74D;"
+                    FontFamily="Segoe MDL2 Assets"
+                    Command="{Binding $parent[ItemsRepeater].DataContext.RemoveEnvironmentVariable}"
+                    CommandParameter="{Binding}"/>
+                </Grid>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+          <Button Margin="0,4,0,0" Content="Add" HorizontalAlignment="Left" Command="{Binding AddEnvironmentVariable}"/>
+          
           <TextBlock Margin="0,16,0,0" Text="Additional Options" FontWeight="Bold"/>
           <TextBox Margin="0,4,0,0" Text="{Binding AdditionalOptions, Mode=TwoWay}"/>
           <TextBlock
