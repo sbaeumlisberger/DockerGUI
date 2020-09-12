@@ -69,6 +69,12 @@
             Classes="Hyperlink"
             Text="See the documentation on docker.com"
             PointerReleased="DockerDocumentationLink_PointerReleased"/>
+
+          <CheckBox 
+            Margin="0,16,0,0"
+            Content="Restart automatically"
+            ToolTip.Tip="If enabled the restart policy is set to unless-stopped."
+            IsChecked="{Binding RestartAutomatically}"/>
         </StackPanel>
       </ScrollViewer>
     </DockPanel>

@@ -13,6 +13,8 @@ namespace DockerGUI.Models
 
         public IDictionary<string, string> EnvironmentVariables { get; set; }
 
+        public bool RestartAutomatically { get; set; }
+
         public string AdditionalOptions { get; set; }
 
         public override string ToString()
@@ -39,6 +41,11 @@ namespace DockerGUI.Models
                     }
                     return $"-e {environmentVariable.Key}={environmentVariable.Value}";
                 }));
+            }
+
+            if (RestartAutomatically)
+            {
+                options.Add("--restart=unless-stopped");
             }
 
             if (!string.IsNullOrEmpty(AdditionalOptions))

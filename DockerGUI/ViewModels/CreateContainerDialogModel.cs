@@ -16,6 +16,8 @@ namespace DockerGUI.ViewModels
 
         public string AdditionalOptions { get; set; }
 
+        public bool RestartAutomatically { get; set; }
+
         public bool IsCanceld { get; set; } = true;
 
         public void AddPortBinding()
