@@ -106,7 +106,7 @@ namespace DockerGUI.Models
 
         public async Task<IList<ImageSearchResult>> SearchDockerHubAsync(string query)
         {
-            string result = await dockerExecutableService.ExecuteAsync($"search --no-trunc {query}").ConfigureAwait(false);
+            string result = await dockerExecutableService.ExecuteAsync($"search --no-trunc \"{query}\"").ConfigureAwait(false);
             return ParseTable(result, new[] { "NAME", "DESCRIPTION", "STARS", "OFFICIAL", "AUTOMATED" })
                  .Select(row => ParseImageSearchResult(row))
                  .ToList();

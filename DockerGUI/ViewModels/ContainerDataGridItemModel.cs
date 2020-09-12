@@ -123,8 +123,8 @@ namespace DockerGUI.ViewModels
             {
                 var processStartInfo = new ProcessStartInfo()
                 {
-                    FileName = "cmd.exe",
-                    Arguments = $"/C docker exec -it {ID} bash"
+                    FileName = "docker",
+                    Arguments = $"exec -it {ID} bash"
                 };
                 Process.Start(processStartInfo);
             }
