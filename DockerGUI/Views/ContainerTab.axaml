@@ -48,19 +48,22 @@
                   <Button
                     Content="&#xE768;"
                     FontFamily="Segoe MDL2 Assets"
-                    Command="{Binding Start}"/>
+                    Command="{Binding Start}"
+                    IsEnabled="{Binding !IsRunning}"/>
                 </Panel>
                 <Panel ToolTip.Tip="Stop">
                   <Button
                     Content="&#xE769;"
                     FontFamily="Segoe MDL2 Assets"
-                    Command="{Binding Stop}"/>
+                    Command="{Binding Stop}"
+                    IsEnabled="{Binding IsRunning}"/>
                 </Panel>
                 <Panel ToolTip.Tip="Restart">
                   <Button
                     Content="&#xE149;"
                     FontFamily="Segoe MDL2 Assets"
-                    Command="{Binding Restart}"/>
+                    Command="{Binding Restart}"
+                    IsEnabled="{Binding IsRunning}"/>
                 </Panel>
                 <Panel ToolTip.Tip="Remove">
                   <Button
@@ -85,7 +88,8 @@
                   <Button
                     Content="&#xE756;"
                     FontFamily="Segoe MDL2 Assets"
-                    Command="{Binding Run}"/>
+                    Command="{Binding Run}"
+                    IsEnabled="{Binding IsRunning}"/>
                 </Panel>
               </StackPanel>
             </DataTemplate>
