@@ -19,14 +19,27 @@ namespace DockerGUI.ViewModels
     {
         public static event EventHandler<DialogRequestedEventArgs> DialogRequested;
 
-        protected Task ShowMessageDialogAsync(string title, string message)
+        public static WindowIcon icon;
+
+        static ViewModelBase()
         {
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            var bitmap = new Bitmap(assets.Open(new Uri("avares://DoсkerGUI/Assets/icon.png")));
+            var stream = assets.Open(new Uri("avares://DockerGUI/Assets/icon.png"));
+            var memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
+            memoryStream.Position = 0;
+            var bitmap = new Bitmap(memoryStream);
+            icon = new WindowIcon(bitmap);
+        }
+
+        protected Task ShowMessageDialogAsync(string title, string message)
+        {
             var ms = MessageBox.Avalonia.MessageBoxManager.GetMessageBoxStandardWindow(new MessageBoxStandardParams
             {
-                
-                WindowIcon = new WindowIcon(bitmap),
+                ContentTitle = title,
+                ContentHeader = title,
+                ContentMessage = message,
+                WindowIcon = icon,
             });
             return ms.Show();
         }
@@ -42,7 +55,7 @@ namespace DockerGUI.ViewModels
         {
             if (Dispatcher.UIThread.CheckAccess())
             {
-                action();                
+                action();
             }
             else
             {

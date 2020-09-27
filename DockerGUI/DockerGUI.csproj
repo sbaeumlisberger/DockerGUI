@@ -5,19 +5,14 @@
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <AvaloniaResource Include="Assets\**" />
+    <AvaloniaResource Include="Assets\*" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.999-cibuild0010914-beta" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.999-cibuild0010914-beta" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.999-cibuild0010914-beta" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.999-cibuild0010914-beta" />
-    <PackageReference Include="MessageBox.Avalonia" Version="0.10.1" />
+    <PackageReference Include="MessageBox.Avalonia" Version="0.10.1-night" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0-rc.1.20451.14" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Views\MessageDialog.axaml.cs">
-      <DependentUpon>MessageDialog.axaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>
