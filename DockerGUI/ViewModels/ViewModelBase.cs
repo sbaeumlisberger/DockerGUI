@@ -22,7 +22,7 @@ namespace DockerGUI.ViewModels
         protected Task ShowMessageDialogAsync(string title, string message)
         {
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            var bitmap = new Bitmap(assets.Open(new Uri("avares://DokerGUI/Assets/icon.png")));
+            var bitmap = new Bitmap(assets.Open(new Uri("avares://DoсkerGUI/Assets/icon.png")));
             var ms = MessageBox.Avalonia.MessageBoxManager.GetMessageBoxStandardWindow(new MessageBoxStandardParams
             {
                 
