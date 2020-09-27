@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reactive;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Threading;
+using MessageBox.Avalonia.DTO;
 using ReactiveUI;
 
 namespace DockerGUI.ViewModels
@@ -14,10 +21,14 @@ namespace DockerGUI.ViewModels
 
         protected Task ShowMessageDialogAsync(string title, string message)
         {
-            var messageDialogModel = new MessageDialogModel(title, message);
-            var eventArgs = new DialogRequestedEventArgs(messageDialogModel);
-            DialogRequested.Invoke(this, eventArgs);
-            return eventArgs.CompletionTask;
+            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+            var bitmap = new Bitmap(assets.Open(new Uri("avares://DokerGUI/Assets/icon.png")));
+            var ms = MessageBox.Avalonia.MessageBoxManager.GetMessageBoxStandardWindow(new MessageBoxStandardParams
+            {
+                
+                WindowIcon = new WindowIcon(bitmap),
+            });
+            return ms.Show();
         }
 
         protected Task ShowDialogAsync(ViewModelBase viewModel)

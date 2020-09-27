@@ -8,11 +8,12 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.9.11" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="0.9.11" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.9.11" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.11" />
-    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
+    <PackageReference Include="Avalonia" Version="0.10.999-cibuild0010914-beta" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="0.10.999-cibuild0010914-beta" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.999-cibuild0010914-beta" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.999-cibuild0010914-beta" />
+    <PackageReference Include="MessageBox.Avalonia" Version="0.10.1" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0-rc.1.20451.14" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Views\MessageDialog.axaml.cs">

@@ -17,9 +17,6 @@ namespace DockerGUI.Views
         public MessageDialog()
         {
             this.InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         private void InitializeComponent()
